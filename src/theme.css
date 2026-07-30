@@ -1,0 +1,52 @@
+@theme {
+  /*
+   * Font Families
+   */
+  --font-inter-sans: "Inter Variable";
+  --font-bitter-serif: "Bitter Variable";
+  --font-jetbrains-mono: "JetBrains Mono Variable";
+  --font-architects-daughter: "Architects Daughter";
+
+  --font-sans:
+    var(--font-inter-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif:
+    var(--font-bitter-serif), ui-serif, Georgia, Cambria, "Times New Roman",
+    Times, serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-handwritten: var(--font-architects-daughter), var(--font-serif);
+
+  /**
+   * Colour Palette
+   */
+  /* Base */
+  --color-parchment: #f5f0e8;
+  --color-mist: #ede8f0;
+  --color-midnight-soil: #1a1814;
+
+  /* Text */
+  --color-inkwell: #1e1c1a;
+  --color-ash: #6b6460;
+
+  /* Accents */
+  --color-sage: #8baf8c;
+  --color-sage-dark: #4a7c59;
+  --color-moss: #4a7c59; /* intentional alias of sage-dark */
+  --color-honey: #e8c97a;
+  --color-dusk-rose: #c9a0a8;
+  --color-warm-walnut: #b8956a;
+
+  --color-chalk: #f7f4ef;
+  --color-cream-soda: #f5ecd7;
+  --color-blush-paper: #f5eae8;
+  --color-sage-wash: #e8efe8;
+  --color-lavender-slip: #ede8f5;
+  --color-slate-ink: #7a8fa6;
+  --color-vinyl-plum: #9b7fa6;
+  --color-candy-gloss: #e8a0b4;
+  --color-sky-wash: #89b4c9;
+  --color-sea-glass: #7abfb5;
+  --color-cinema-dusk: #a89070;
+}

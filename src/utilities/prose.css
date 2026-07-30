@@ -1,0 +1,27 @@
+@utility prose {
+  @apply max-w-none!;
+
+  /**
+      * Disabling prepending and appending quote marks to block-quotes.
+      * See https://github.com/tailwindlabs/tailwindcss-typography/issues/66#issuecomment-2635113327
+      */
+  blockquote {
+    p {
+      &:first-of-type:before,
+      &:last-of-type:after {
+        @apply content-none;
+      }
+
+      cite {
+        @apply font-semibold not-italic;
+
+        &:before {
+          content: "— ";
+        }
+        &:after {
+          content: "";
+        }
+      }
+    }
+  }
+}
