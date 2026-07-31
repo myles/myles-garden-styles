@@ -55,8 +55,8 @@ You can also import individual pieces via the package's [exports](#exports):
 Once imported, the tokens are available as ordinary Tailwind utilities:
 
 ```html
-<article class="bg-parchment font-sans text-inkwell">
-  <h1 class="font-serif text-sage-dark">In the garden</h1>
+<article class="bg-parchment text-inkwell font-sans">
+  <h1 class="text-sage-dark font-serif">In the garden</h1>
   <p class="font-handwritten text-ash">a note in the margin</p>
   <pre class="font-mono">$ npm run build</pre>
 </article>

@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@mylesb/myles-garden-styles";
+
+/*
+ * Drive Tailwind's `dark:` variant (and the token reassignment below) off a
+ * `.dark` class on <html> rather than the default `prefers-color-scheme` media
+ * query, so a manual toggle can override the OS preference. The class is
+ * resolved from localStorage + system preference before first paint in
+ * Layout.astro. See https://tailwindcss.com/docs/dark-mode.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Semantic, theme-aware tokens for the docs page. Declared in @theme so they
+ * generate the bg, text and border colour utilities; the light values are the
+ * default and the dark values are reassigned once via the `dark` variant below
+ * (unlayered, so they win over the @theme defaults).
+ */
+@theme {
+  --color-ground: #f5f0e8;
+  --color-surface: #faf7f1;
+  --color-ink: #1e1c1a;
+  --color-muted: #6b6460;
+  --color-line: rgba(30, 28, 26, 0.12);
+  --color-accent: #4a7c59;
+  --color-tile-ring: rgba(30, 28, 26, 0.1);
+}
+
+:root {
+  color-scheme: light;
+
+  @variant dark {
+    color-scheme: dark;
+    --color-ground: #1a1814;
+    --color-surface: #231f19;
+    --color-ink: #f5f0e8;
+    --color-muted: #a89d90;
+    --color-line: rgba(245, 240, 232, 0.14);
+    --color-accent: #8baf8c;
+    --color-tile-ring: rgba(245, 240, 232, 0.14);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
