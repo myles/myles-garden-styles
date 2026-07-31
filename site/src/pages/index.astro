@@ -1,0 +1,367 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+type Swatch = {
+  name: string;
+  hex: string;
+  ink: string;
+  note?: string;
+};
+
+type SwatchGroup = {
+  label: string;
+  swatches: Swatch[];
+};
+
+// Text colour laid over each tile — hand-picked for legibility, not derived
+// from luminance (e.g. sage takes light ink despite being a light green).
+const INK_DARK = "#1a1814";
+const INK_LIGHT = "#f5f0e8";
+
+const palette: SwatchGroup[] = [
+  {
+    label: "Base",
+    swatches: [
+      { name: "parchment", hex: "#f5f0e8", ink: INK_DARK },
+      { name: "mist", hex: "#ede8f0", ink: INK_DARK },
+      { name: "midnight-soil", hex: "#1a1814", ink: INK_LIGHT },
+    ],
+  },
+  {
+    label: "Text",
+    swatches: [
+      { name: "inkwell", hex: "#1e1c1a", ink: INK_LIGHT },
+      { name: "ash", hex: "#6b6460", ink: INK_LIGHT },
+    ],
+  },
+  {
+    label: "Accents",
+    swatches: [
+      { name: "sage", hex: "#8baf8c", ink: INK_LIGHT },
+      { name: "sage-dark", hex: "#4a7c59", ink: INK_LIGHT },
+      { name: "moss", hex: "#4a7c59", ink: INK_LIGHT, note: "= sage-dark" },
+      { name: "honey", hex: "#e8c97a", ink: INK_DARK },
+      { name: "dusk-rose", hex: "#c9a0a8", ink: INK_DARK },
+      { name: "warm-walnut", hex: "#b8956a", ink: INK_LIGHT },
+    ],
+  },
+  {
+    label: "Paper tints",
+    swatches: [
+      { name: "chalk", hex: "#f7f4ef", ink: INK_DARK },
+      { name: "cream-soda", hex: "#f5ecd7", ink: INK_DARK },
+      { name: "blush-paper", hex: "#f5eae8", ink: INK_DARK },
+      { name: "sage-wash", hex: "#e8efe8", ink: INK_DARK },
+      { name: "lavender-slip", hex: "#ede8f5", ink: INK_DARK },
+    ],
+  },
+  {
+    label: "Extended palette",
+    swatches: [
+      { name: "slate-ink", hex: "#7a8fa6", ink: INK_LIGHT },
+      { name: "vinyl-plum", hex: "#9b7fa6", ink: INK_LIGHT },
+      { name: "candy-gloss", hex: "#e8a0b4", ink: INK_DARK },
+      { name: "sky-wash", hex: "#89b4c9", ink: INK_DARK },
+      { name: "sea-glass", hex: "#7abfb5", ink: INK_DARK },
+      { name: "cinema-dusk", hex: "#a89070", ink: INK_LIGHT },
+    ],
+  },
+];
+
+// Shared utility groupings, factored out where the same combination repeats.
+const eyebrow =
+  "font-mono text-[0.72rem] uppercase tracking-[0.18em] text-muted";
+const navLink =
+  "border-b border-transparent pb-[2px] text-muted no-underline hover:border-accent hover:text-accent";
+// Entrance animation, staggered per section. The delay is baked into the
+// `animation` shorthand (rather than a separate animation-delay utility) so the
+// stagger can't be reset by utility ordering. Written as full literals because
+// Tailwind only detects class names present verbatim in the source.
+const riseHero =
+  "motion-safe:animate-[rise_0.6s_cubic-bezier(0.2,0.7,0.2,1)_0.02s_both]";
+const riseType =
+  "motion-safe:animate-[rise_0.6s_cubic-bezier(0.2,0.7,0.2,1)_0.06s_both]";
+const risePalette =
+  "motion-safe:animate-[rise_0.6s_cubic-bezier(0.2,0.7,0.2,1)_0.1s_both]";
+const secHead =
+  "mb-[1.8rem] flex items-baseline gap-4 border-b border-line pb-[0.6rem]";
+const secTitle = "font-serif text-2xl font-semibold tracking-[-0.01em]";
+const secCount = "ml-auto font-mono text-[0.72rem] text-muted";
+const specBox =
+  "mb-[1.1rem] rounded-[2px] border border-line bg-surface px-[1.8rem] py-[1.6rem]";
+const specTop = "mb-4 flex flex-wrap items-baseline gap-[0.9rem]";
+const specRole =
+  "font-mono text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-accent";
+const specTok = "font-mono text-[0.74rem] text-muted";
+const specFam = "ml-auto font-mono text-[0.74rem] text-muted";
+const rampBox = "mt-4 flex flex-col gap-[0.15rem]";
+const rampRow =
+  "overflow-hidden text-ellipsis whitespace-nowrap text-[1.35rem] leading-[1.35]";
+const wLabel = "font-mono text-[0.7rem] tracking-[0.05em] text-muted";
+const codeInline = "font-mono text-[0.9em]";
+---
+
+<Layout>
+  <button
+    id="themeToggle"
+    type="button"
+    aria-label="Toggle colour theme"
+    class="fixed top-4 right-4 z-10 cursor-pointer rounded-full border border-line bg-surface px-[0.85rem] py-[0.45rem] font-mono text-[0.72rem] tracking-[0.04em] text-ink hover:border-accent hover:text-accent"
+  >
+    ☾ Dark
+  </button>
+  <div
+    class="min-h-screen bg-ground px-[clamp(1.25rem,5vw,3rem)] py-[clamp(1.5rem,5vw,5rem)] font-sans text-[17px] leading-[1.6] text-ink antialiased"
+  >
+    <div class="mx-auto max-w-[960px]">
+      <header class:list={["mb-13 border-b border-line pb-10", riseHero]}>
+        <p class={eyebrow}>@mylesb/myles-garden-styles · v1.0.0 · MIT</p>
+        <h1
+          class="mt-[0.6rem] mb-[0.4rem] font-serif text-[clamp(2.6rem,7vw,4.2rem)] leading-[1.02] font-bold tracking-[-0.02em] text-balance"
+        >
+          myles.garden styles
+        </h1>
+        <p class="mt-[0.2rem] max-w-[52ch] text-[1.12rem] text-muted">
+          The shared Tailwind foundation for myles.garden — four typefaces and a
+          warm palette drawn from soil, sage, and honey, exposed as CSS-first
+          <code class={codeInline}>@theme</code>
+          tokens.
+        </p>
+        <p
+          class="mt-[1.1rem] inline-block rotate-[-1.2deg] font-handwritten text-2xl text-accent"
+        >
+          a small design system, tended by hand ✿
+        </p>
+        <div
+          class="mt-[1.6rem] flex flex-wrap gap-[1.4rem] font-mono text-[0.78rem] text-muted"
+        >
+          <span><b class="font-medium text-ink">4</b> typefaces</span>
+          <span><b class="font-medium text-ink">22</b> colour tokens</span>
+          <span><b class="font-medium text-ink">Tailwind</b> v4</span>
+        </div>
+        <nav
+          class="mt-[1.4rem] flex flex-wrap gap-x-[1.1rem] gap-y-[0.4rem] font-mono text-[0.8rem]"
+          aria-label="On this page"
+        >
+          <a class={navLink} href="#type">Typefaces</a>
+          <a class={navLink} href="#palette">Palette</a>
+          <a class={navLink} href="https://github.com/myles/myles-garden-styles"
+            >GitHub ↗</a
+          >
+        </nav>
+      </header>
+
+      <section id="type" class:list={["mb-16 scroll-mt-6", riseType]}>
+        <div class={secHead}>
+          <h2 class={secTitle}>Typefaces</h2>
+          <span class={secCount}>4 families · variable</span>
+        </div>
+
+        <div class={specBox}>
+          <div class={specTop}>
+            <span class={specRole}>Body · Sans</span><code class={specTok}
+              >font-sans</code
+            ><code class={specFam}>Inter Variable</code>
+          </div>
+          <p
+            class="font-sans text-[clamp(2rem,5.5vw,3.1rem)] leading-[1.05] font-semibold tracking-[-0.01em] text-ink"
+          >
+            The quiet backbone of the page.
+          </p>
+          <div class:list={[rampBox, "font-sans"]}>
+            <span class:list={[rampRow, "font-light"]}
+              >Light 300 — hardy perennials, sown in autumn
+              <span class={wLabel}>300</span></span
+            >
+            <span class:list={[rampRow, "font-normal"]}
+              >Regular 400 — hardy perennials, sown in autumn
+              <span class={wLabel}>400</span></span
+            >
+            <span class:list={[rampRow, "font-medium"]}
+              >Medium 500 — hardy perennials, sown in autumn
+              <span class={wLabel}>500</span></span
+            >
+            <span class:list={[rampRow, "font-bold"]}
+              >Bold 700 — hardy perennials, sown in autumn
+              <span class={wLabel}>700</span></span
+            >
+          </div>
+        </div>
+
+        <div class={specBox}>
+          <div class={specTop}>
+            <span class={specRole}>Display · Serif</span><code class={specTok}
+              >font-serif</code
+            ><code class={specFam}>Bitter Variable</code>
+          </div>
+          <p
+            class="font-serif text-[clamp(2rem,5.5vw,3.1rem)] leading-[1.05] font-bold tracking-[-0.01em] text-ink"
+          >
+            Tend the garden every morning.
+          </p>
+          <div class:list={[rampBox, "font-serif"]}>
+            <span class:list={[rampRow, "font-normal"]}
+              >Regular 400 — slab-serif with a warm, bookish weight
+              <span class={wLabel}>400</span></span
+            >
+            <span class:list={[rampRow, "font-semibold"]}
+              >Semibold 600 — slab-serif with a warm, bookish weight
+              <span class={wLabel}>600</span></span
+            >
+            <span class:list={[rampRow, "font-extrabold"]}
+              >Extrabold 800 — slab-serif with a warm, bookish weight
+              <span class={wLabel}>800</span></span
+            >
+          </div>
+        </div>
+
+        <div class={specBox}>
+          <div class={specTop}>
+            <span class={specRole}>Mono · Code</span><code class={specTok}
+              >font-mono</code
+            ><code class={specFam}>JetBrains Mono Variable</code>
+          </div>
+          <p
+            class="font-mono text-[clamp(1.3rem,3.5vw,1.9rem)] leading-[1.05] font-medium tracking-[-0.01em] text-ink"
+          >
+            --color-sage: #8baf8c;
+          </p>
+          <div class:list={[rampBox, "font-mono"]}>
+            <span class:list={[rampRow, "font-normal"]}
+              >const bloom = () =&gt; garden.tend();
+              <span class={wLabel}>400</span></span
+            >
+            <span class:list={[rampRow, "font-medium"]}
+              >const bloom = () =&gt; garden.tend();
+              <span class={wLabel}>500</span></span
+            >
+            <span class:list={[rampRow, "font-bold"]}
+              >const bloom = () =&gt; garden.tend();
+              <span class={wLabel}>700</span></span
+            >
+          </div>
+        </div>
+
+        <div class={specBox}>
+          <div class={specTop}>
+            <span class={specRole}>Handwritten</span><code class={specTok}
+              >font-handwritten</code
+            ><code class={specFam}>Architects Daughter</code>
+          </div>
+          <p
+            class="font-handwritten text-[clamp(1.8rem,5vw,2.8rem)] leading-[1.15] font-normal tracking-[-0.01em] text-ink"
+          >
+            a margin note, pencilled in by hand
+          </p>
+        </div>
+      </section>
+
+      <section id="palette" class:list={["mb-16 scroll-mt-6", risePalette]}>
+        <div class={secHead}>
+          <h2 class={secTitle}>Palette</h2>
+          <span class={secCount}>22 tokens</span>
+        </div>
+        <p class="mt-[-0.6rem] mb-[1.6rem] max-w-[60ch] text-muted">
+          Every token generates the usual Tailwind colour utilities —
+          <code class={codeInline}>bg-*</code>,
+          <code class={codeInline}>text-*</code>,
+          <code class={codeInline}>border-*</code>. Swatches show their true
+          value in either theme.
+        </p>
+
+        {
+          palette.map((group, i) => (
+            <Fragment>
+              <p
+                class:list={[
+                  eyebrow,
+                  i === 0 ? "mb-[0.9rem]" : "mt-8 mb-[0.9rem]",
+                ]}
+              >
+                {group.label}
+              </p>
+              <div class="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
+                {group.swatches.map((sw) => (
+                  <figure>
+                    <div
+                      class="flex h-[88px] items-end rounded-[3px] px-[0.6rem] py-2 shadow-[inset_0_0_0_1px_var(--color-tile-ring)]"
+                      style={`background: ${sw.hex}`}
+                    >
+                      <code
+                        class="font-mono text-[0.72rem] tracking-[0.02em] opacity-90"
+                        style={`color: ${sw.ink}`}
+                      >
+                        {sw.hex}
+                      </code>
+                    </div>
+                    <figcaption class="mt-2 flex flex-col gap-[0.12rem]">
+                      <span class="text-ink flex items-baseline gap-[0.4rem] text-[0.9rem] font-medium">
+                        {sw.name}
+                        {sw.note && (
+                          <span class="border-line text-accent rounded-[2px] border px-[0.3rem] font-mono text-[0.62rem] tracking-[0.08em] uppercase">
+                            {sw.note}
+                          </span>
+                        )}
+                      </span>
+                      <code class="text-muted font-mono text-[0.72rem]">
+                        bg-{sw.name}
+                      </code>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </Fragment>
+          ))
+        }
+      </section>
+
+      <footer
+        class="mt-4 flex flex-wrap justify-between gap-[0.6rem] border-t border-line pt-[1.4rem] font-mono text-[0.74rem] text-muted"
+      >
+        <span
+          >Design tokens for myles.garden — full documentation on GitHub.</span
+        >
+        <span
+          ><a
+            class="text-accent no-underline"
+            href="https://github.com/myles/myles-garden-styles">github</a
+          > ·
+          <a
+            class="text-accent no-underline"
+            href="https://www.npmjs.com/package/@mylesb/myles-garden-styles"
+            >npm</a
+          >
+          ·
+          <a class="text-accent no-underline" href="https://myles.garden"
+            >myles.garden</a
+          ></span
+        >
+      </footer>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  (function () {
+    var root = document.documentElement,
+      btn = document.getElementById("themeToggle");
+    var saved = localStorage.getItem("mgs-theme");
+    if (saved) root.setAttribute("data-theme", saved);
+    function current() {
+      return (
+        root.getAttribute("data-theme") ||
+        (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light")
+      );
+    }
+    function label() {
+      btn.textContent = current() === "dark" ? "☀ Light" : "☾ Dark";
+    }
+    label();
+    btn.addEventListener("click", function () {
+      var next = current() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("mgs-theme", next);
+      label();
+    });
+  })();
+</script>
