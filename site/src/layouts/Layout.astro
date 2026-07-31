@@ -45,12 +45,15 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
     <link rel="canonical" href={canonicalUrl} />
 
     {
-      /* Apply the saved theme before first paint to avoid a flash — must be inline (not a hoisted module script) to run in <head>. */
+      /* Resolve the theme before first paint to avoid a flash — must be inline (not a hoisted module script) to run in <head>. An explicit choice in localStorage wins; otherwise follow the OS preference. */
     }
     <script is:inline>
       (function () {
-        var saved = localStorage.getItem("mgs-theme");
-        if (saved) document.documentElement.setAttribute("data-theme", saved);
+        var pref = localStorage.getItem("mgs-theme");
+        var dark =
+          pref === "dark" ||
+          (pref === null && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
       })();
     </script>
   </head>

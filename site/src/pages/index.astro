@@ -346,25 +346,32 @@ const codeInline = "font-mono text-[0.9em]";
     var root = document.documentElement;
     const btn = document.getElementById("themeToggle");
     if (!btn) return;
-    // The saved theme is applied pre-paint by the inline <head> script in
+    // The theme class is resolved pre-paint by the inline <head> script in
     // Layout.astro (this hoisted module script runs too late to avoid a flash).
-    function current() {
-      return (
-        root.getAttribute("data-theme") ||
-        (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light")
-      );
+    function isDark() {
+      return root.classList.contains("dark");
     }
     function label() {
       // Non-null: guarded by the early return above (TS won't narrow `btn`
       // from the outer scope into this closure).
-      btn!.textContent = current() === "dark" ? "☀ Light" : "☾ Dark";
+      btn!.textContent = isDark() ? "☀ Light" : "☾ Dark";
     }
     label();
     btn.addEventListener("click", function () {
-      var next = current() === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
+      var next = isDark() ? "light" : "dark";
+      root.classList.toggle("dark", next === "dark");
       localStorage.setItem("mgs-theme", next);
       label();
     });
+    // Keep following the OS while no explicit choice has been made.
+    matchMedia("(prefers-color-scheme: dark)").addEventListener(
+      "change",
+      function (event) {
+        if (localStorage.getItem("mgs-theme") === null) {
+          root.classList.toggle("dark", event.matches);
+          label();
+        }
+      },
+    );
   })();
 </script>
