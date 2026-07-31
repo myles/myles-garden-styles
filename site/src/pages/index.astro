@@ -124,7 +124,7 @@ const codeInline = "font-mono text-[0.9em]";
         <p class="mt-[0.2rem] max-w-[52ch] text-[1.12rem] text-muted">
           The shared Tailwind foundation for myles.garden — four typefaces and a
           warm palette drawn from soil, sage, and honey, exposed as CSS-first
-          <code class={codeInline}>@theme</code>
+          {" "}<code class={codeInline}>@theme</code>{" "}
           tokens.
         </p>
         <p
@@ -171,19 +171,19 @@ const codeInline = "font-mono text-[0.9em]";
           <div class:list={[rampBox, "font-sans"]}>
             <span class:list={[rampRow, "font-light"]}
               >Light 300 — hardy perennials, sown in autumn
-              <span class={wLabel}>300</span></span
+              {" "}<span class={wLabel}>300</span></span
             >
             <span class:list={[rampRow, "font-normal"]}
               >Regular 400 — hardy perennials, sown in autumn
-              <span class={wLabel}>400</span></span
+              {" "}<span class={wLabel}>400</span></span
             >
             <span class:list={[rampRow, "font-medium"]}
               >Medium 500 — hardy perennials, sown in autumn
-              <span class={wLabel}>500</span></span
+              {" "}<span class={wLabel}>500</span></span
             >
             <span class:list={[rampRow, "font-bold"]}
               >Bold 700 — hardy perennials, sown in autumn
-              <span class={wLabel}>700</span></span
+              {" "}<span class={wLabel}>700</span></span
             >
           </div>
         </div>
@@ -202,15 +202,15 @@ const codeInline = "font-mono text-[0.9em]";
           <div class:list={[rampBox, "font-serif"]}>
             <span class:list={[rampRow, "font-normal"]}
               >Regular 400 — slab-serif with a warm, bookish weight
-              <span class={wLabel}>400</span></span
+              {" "}<span class={wLabel}>400</span></span
             >
             <span class:list={[rampRow, "font-semibold"]}
               >Semibold 600 — slab-serif with a warm, bookish weight
-              <span class={wLabel}>600</span></span
+              {" "}<span class={wLabel}>600</span></span
             >
             <span class:list={[rampRow, "font-extrabold"]}
               >Extrabold 800 — slab-serif with a warm, bookish weight
-              <span class={wLabel}>800</span></span
+              {" "}<span class={wLabel}>800</span></span
             >
           </div>
         </div>
@@ -229,15 +229,15 @@ const codeInline = "font-mono text-[0.9em]";
           <div class:list={[rampBox, "font-mono"]}>
             <span class:list={[rampRow, "font-normal"]}
               >const bloom = () =&gt; garden.tend();
-              <span class={wLabel}>400</span></span
+              {" "}<span class={wLabel}>400</span></span
             >
             <span class:list={[rampRow, "font-medium"]}
               >const bloom = () =&gt; garden.tend();
-              <span class={wLabel}>500</span></span
+              {" "}<span class={wLabel}>500</span></span
             >
             <span class:list={[rampRow, "font-bold"]}
               >const bloom = () =&gt; garden.tend();
-              <span class={wLabel}>700</span></span
+              {" "}<span class={wLabel}>700</span></span
             >
           </div>
         </div>
@@ -343,10 +343,11 @@ const codeInline = "font-mono text-[0.9em]";
 
 <script>
   (function () {
-    var root = document.documentElement,
-      btn = document.getElementById("themeToggle");
-    var saved = localStorage.getItem("mgs-theme");
-    if (saved) root.setAttribute("data-theme", saved);
+    var root = document.documentElement;
+    const btn = document.getElementById("themeToggle");
+    if (!btn) return;
+    // The saved theme is applied pre-paint by the inline <head> script in
+    // Layout.astro (this hoisted module script runs too late to avoid a flash).
     function current() {
       return (
         root.getAttribute("data-theme") ||
@@ -354,7 +355,9 @@ const codeInline = "font-mono text-[0.9em]";
       );
     }
     function label() {
-      btn.textContent = current() === "dark" ? "☀ Light" : "☾ Dark";
+      // Non-null: guarded by the early return above (TS won't narrow `btn`
+      // from the outer scope into this closure).
+      btn!.textContent = current() === "dark" ? "☀ Light" : "☾ Dark";
     }
     label();
     btn.addEventListener("click", function () {

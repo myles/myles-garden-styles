@@ -41,9 +41,18 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
     <meta name="generator" content={Astro.generator} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
 
     <link rel="canonical" href={canonicalUrl} />
+
+    {
+      /* Apply the saved theme before first paint to avoid a flash — must be inline (not a hoisted module script) to run in <head>. */
+    }
+    <script is:inline>
+      (function () {
+        var saved = localStorage.getItem("mgs-theme");
+        if (saved) document.documentElement.setAttribute("data-theme", saved);
+      })();
+    </script>
   </head>
   <body>
     <slot />
